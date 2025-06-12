@@ -4,3 +4,29 @@ env/
 .DS_Store
 *.log
 .env
+# Docker files and directories
+.dockerignore
+Dockerfile
+docker-compose.override.yml
+docker-compose.prod.yml
+docker-compose.test.yml
+docker-compose.dev.yml
+
+# Local settings
+local_settings.py
+settings/local.py
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# IDE files
+.idea/
+.vscode/
+
+# Other ignored files
+*.sqlite3
+*.db
+*.db-journal
