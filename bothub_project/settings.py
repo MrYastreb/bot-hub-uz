@@ -27,8 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Локальные приложения BotHubUz
-    'bots',
-    'users',
+    'bots.apps.BotsConfig',  # Приложение ботов
+    'users.apps.UsersConfig',  # Кастомная модель пользователя
 ]
 
 # Middleware — обработка входящих запросов
