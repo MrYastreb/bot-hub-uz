@@ -1,15 +1,24 @@
-from pathlib import Path
+"""
+Настройки проекта BotHubUz
+"""
+
 import os
 
-BASE_DIR = Path(__file__).parent.parent
+# Базовая директория проекта
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'django-insecure-your-secret-key'
+# Секретный ключ Django
+SECRET_KEY = 'your-secret-key'
 
+# Режим отладки (DEBUG = True — для разработки)
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Разрешённые хосты для доступа к серверу
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# Приложения, которые будут использоваться
 INSTALLED_APPS = [
+    # Стандартные приложения Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -17,14 +26,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party
-    'rest_framework',
-
-    # Local apps
-    'users',
+    # Локальные приложения BotHubUz
     'bots',
+    'users',
 ]
 
+# Middleware — обработка входящих запросов
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -35,8 +42,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Точка входа для URL-маршрутов
 ROOT_URLCONF = 'bothub_project.urls'
 
+# Настройки шаблонизатора Django
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -53,25 +62,38 @@ TEMPLATES = [
     },
 ]
 
+# WSGI-точка входа
 WSGI_APPLICATION = 'bothub_project.wsgi.application'
 
+# Настройки базы данных PostgreSQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bothub',
         'USER': 'admin',
         'PASSWORD': 'admin123',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = []
-
+# Язык проекта
 LANGUAGE_CODE = 'en-us'
+
+# Часовой пояс
 TIME_ZONE = 'UTC'
+
+# Использовать ли локализацию
 USE_I18N = True
-USE_L10N = True
+
+# Использовать ли часовые пояса
 USE_TZ = True
 
+# URL для статических файлов
 STATIC_URL = '/static/'
+
+# Автоматическое создание первичных ключей
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Используем кастомную модель пользователя
+AUTH_USER_MODEL = 'users.User'
