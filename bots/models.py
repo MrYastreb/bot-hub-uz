@@ -1,44 +1,45 @@
 from django.db import models
-from users.models import User
+from django.contrib.auth import get_user_model
 
-class Bot(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    token = models.CharField(max_length=255, unique=True)
-    username = models.CharField(max_length=255, blank=True)
-    webhook_url = models.URLField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Scenario(models.Model):
-    bot = models.ForeignKey(Bot, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    is_active = models.BooleanField(default=True)
-
+# Получаем кастомную модель пользователя через AUTH_USER_MODEL
+User = get_user_model()
 
 class Block(models.Model):
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+    """
+    Модель блока для конструктора ботов.
+    Каждый блок связан с сценарием и содержит текст сообщения.
+    """
+    scenario = models.ForeignKey('Scenario', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     message_text = models.TextField()
     order = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return self.title
+
 
 class Button(models.Model):
+    """
+    Модель кнопки для конструктора ботов.
+    Кнопка связана с блоком и может иметь действие (например, переход к другому блоку или открытие формы оплаты).
+    """
     ACTION_CHOICES = [
-        ('go_to_block', 'Перейти к блоку'),
-        ('open_payment', 'Открыть оплату'),
+        ('go_to_block', 'Переход к другому блоку'),
+        ('open_payment', 'Открытие формы оплаты'),
         ('external_link', 'Внешняя ссылка')
     ]
 
     block = models.ForeignKey(Block, related_name='buttons', on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
     action_type = models.CharField(max_length=20, choices=ACTION_CHOICES)
-    target_block = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
-    url = models.URLField(blank=True)
+    target_block = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='target_buttons'
+    )
+    url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.block} → {self.text}"
