@@ -4,24 +4,25 @@
 
 import os
 from pathlib import Path
-from dotenv import load_dotenv  # Для загрузки переменных из .env
+from dotenv import load_dotenv
 
-# Загрузка переменных окружения из .env
+# Загрузка переменных из .env файла
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/ 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-insecure-default-key-for-dev')
+# Берём из переменной окружения, если не задано — используется fallback (только для разработки)
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key-for-dev')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-# Укажите ALLOWED_HOSTS, если DEBUG = False или при работе на сервере
+# Разрешённые хосты для доступа к серверу
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Application definition
@@ -35,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Локальные приложения
-    'bots.apps.BotsConfig',   # Боты и блоки
+    'bots.apps.BotsConfig',   # Конструктор ботов
     'users.apps.UsersConfig',  # Кастомная модель пользователя
 ]
 
@@ -79,7 +80,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),  # Это "db" — имя сервиса из docker-compose.yml
+        'HOST': os.getenv('DB_HOST'),  # Это имя сервиса в docker-compose.yml
         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
@@ -120,9 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/ 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для сборки статики в продакшене
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для сборки статики в продакшне
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Для хранения медиафайлов
+MEDIA_ROOT = BASE_DIR / 'media'  # Для загрузки медиафайлов
 
 
 # Default primary key field type
@@ -137,6 +139,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 
-# Настройка логина и логаута
+# Настройки логина и логаута
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
