@@ -1,20 +1,21 @@
+# Используем официальный образ Python
 FROM python:3.11-slim
 
-# Установка зависимости dotenv
-RUN pip install python-dotenv
-
+# Задаём рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем requirements.txt и устанавливаем зависимости
+# Копируем файл зависимостей и устанавливаем их
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем остальные файлы проекта
+# Копируем всё остальное
 COPY . .
 
-# Копируем .env (если он существует)
+# Копируем .env если нужно (опционально)
 COPY .env .
 
+# Открываем порт для gunicorn
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "bothub_project.wsgi"]
+# Команду запуска задаёт docker-compose.yml, поэтому CMD можно опустить или оставить для отладки:
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "bothub_project.wsgi"]
